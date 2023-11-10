@@ -10,6 +10,8 @@
 #include <vector>
 
 #include "imp_type.hh"
+#include "imp_visitor.hh"
+#include "type_visitor.hh"
 
 using namespace std;
 
@@ -49,9 +51,10 @@ public:
 class IdExp : public Exp {
 public:
   string id;
-  IdExp(string id);
-  int accept(ImpVisitor* v);
-  ImpType accept(TypeVisitor* v);
+  bool isBool;
+  IdExp(string id, bool isBool = false):id(id), isBool(isBool) {}
+  int accept(ImpVisitor* v) { return v->visit(this); }
+  ImpType accept(TypeVisitor* v) { return v->visit(this); }
   ~IdExp();
 };
 
@@ -176,6 +179,8 @@ public:
   void accept(TypeVisitor* v);  
   ~Program();
 };
+
+
 
 
 

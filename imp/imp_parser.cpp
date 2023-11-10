@@ -38,6 +38,8 @@ Scanner::Scanner(string s):input(s),first(0),current(0) {
   reserved["do"] = Token::DO;
   reserved["endwhile"] = Token::ENDWHILE;
   reserved["var"] = Token::VAR;
+  reserved["true"] = Token::TRUE;
+  reserved["false"] = Token::FALSE;
 }
 
 Token* Scanner::nextToken() {
@@ -354,6 +356,13 @@ Exp* Parser::parseFactor() {
   }
   if (match(Token::ID)) {
     return new IdExp(previous->lexema);
+  }
+  else if (check(Token::TRUE)) {
+    advance();
+    return new IdExp("true", true);
+  } else if (check(Token::FALSE)) {
+    advance();
+    return new IdExp("false", true);
   }
   if (match(Token::LPAREN)) {
     Exp* e = parseExp();

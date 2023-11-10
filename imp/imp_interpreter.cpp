@@ -104,6 +104,8 @@ int ImpInterpreter::visit(NumberExp* e) {
 }
 
 int ImpInterpreter::visit(IdExp* e) {
+  if (e->id == "true") return 1;
+  if (e->id == "false") return 0;
   if (env.check(e->id))
     return env.lookup(e->id);
   else {

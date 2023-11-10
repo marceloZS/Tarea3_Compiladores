@@ -8,6 +8,7 @@
 #include "imp_interpreter.hh"
 #include "imp_typechecker.hh"
 
+
 int main(int argc, const char* argv[]) {
 
   Program *program; 
@@ -28,6 +29,19 @@ int main(int argc, const char* argv[]) {
   ImpPrinter printer;
   ImpInterpreter interpreter;
   ImpTypeChecker checker;
+
+  /*
+  int resultTrue = interpreter.interpret("print true;");
+  if (resultTrue != 1) {
+    std::cerr << "Error: expected 1, but got " << resultTrue << " for 'print true;'" << std::endl;
+  }
+
+  int resultFalse = interpreter.interpret("print false;");
+  if (resultFalse != 0) {
+    std::cerr << "Error: expected 0, but got " << resultFalse << " for 'print false;'" << std::endl;
+  }
+  */
+  
 
   
   printer.print(program);

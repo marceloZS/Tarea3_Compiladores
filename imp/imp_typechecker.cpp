@@ -113,6 +113,7 @@ ImpType ImpTypeChecker::visit(NumberExp* e) {
 }
 
 ImpType ImpTypeChecker::visit(IdExp* e) {
+  if (e->id == "true" || e->id == "false") return booltype;
   if (env.check(e->id))
     return env.lookup(e->id);
   else {
