@@ -20,6 +20,7 @@ class TypeVisitor;
 
 enum BinaryOp { PLUS, MINUS, MULT, DIV, EXP, LT, LTEQ, EQ};
 
+
   
 class Exp {
 public:
@@ -180,8 +181,35 @@ public:
   ~Program();
 };
 
+class AndExp : public Exp {
+public:
+  Exp* left;
+  Exp* right;
+  AndExp(Exp* left, Exp* right):left(left), right(right) {}
+  int accept(ImpVisitor* v) override { return v->visit(this); }
+  ImpType accept(TypeVisitor* v) override { return v->visit(this); }
+};
 
+class OrExp : public Exp {
+public:
+  Exp* left;
+  Exp* right;
+  OrExp(Exp* left, Exp* right):left(left), right(right) {}
+  int accept(ImpVisitor* v) override { return v->visit(this); }
+  ImpType accept(TypeVisitor* v) override { return v->visit(this); }
+};
 
+class ForStatement : public Stm {
+public:
+  string id;
+  Exp* start;
+  Exp* end;
+  Body* body;
+  ForStatement(string id, Exp* start, Exp* end, Body* body):id(id), start(start), end(end), body(body) {}
+  int accept(ImpVisitor* v) override { return v->visit(this); }
+  void accept(TypeVisitor* v) override { v->visit(this); }
+  ~ForStatement() override;
+};
 
 
 #endif

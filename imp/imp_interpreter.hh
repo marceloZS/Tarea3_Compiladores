@@ -30,6 +30,11 @@ public:
   int visit(IdExp* e);
   int visit(ParenthExp* e);
   int visit(CondExp* e);
+
+  int visit(AndExp* e);
+  int visit(OrExp* e);
+  int visit(ForStatement* s);
+  
 };
 
 

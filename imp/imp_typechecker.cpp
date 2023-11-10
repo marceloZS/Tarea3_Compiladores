@@ -122,6 +122,43 @@ ImpType ImpTypeChecker::visit(IdExp* e) {
   }
 }
 
+
+ImpType ImpTypeChecker::visit(AndExp* e){
+  ImpType left = e->left->accept(this);
+  ImpType right = e->right->accept(this);
+  if (!left.match(booltype) || !right.match(booltype)) {
+    cout << "Tipo incorrecto en operador and/or" << endl;
+    exit(0);
+}
+return booltype;
+}
+
+ImpType ImpTypeChecker::visit(OrExp* e){
+  ImpType left = e->left->accept(this);
+  ImpType right = e->right->accept(this);
+  if (!left.match(booltype) || !right.match(booltype)) {
+    cout << "Tipo incorrecto en operador and/or" << endl;
+    exit(0);
+}
+return booltype;
+
+}
+ImpType ImpTypeChecker::visit(ForStatement* s){
+  ImpType start = s->start->accept(this);
+  ImpType end = s->end->accept(this);
+  if (!start.match(inttype) || !end.match(inttype)) {
+    cout << "Tipo incorrecto en sentencia for-do" << endl;
+    exit(0);
+  }
+  env.add_level();
+  env.add_var(s->id, inttype);
+  s->body->accept(this);
+  env.remove_level();
+  return inttype;
+  
+}
+
+
 ImpType ImpTypeChecker::visit(ParenthExp* ep) {
   return ep->e->accept(this);
 }

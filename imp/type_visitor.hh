@@ -15,6 +15,10 @@ public:
   virtual void visit(PrintStatement* e) = 0;
   virtual void visit(IfStatement* e) = 0;
   virtual void visit(WhileStatement* e) = 0;
+
+  virtual ImpType visit(AndExp* e) = 0;
+  virtual ImpType visit(OrExp* e) = 0;
+  virtual ImpType visit(ForStatement* s) = 0;
   
   virtual ImpType visit(BinaryExp* e) = 0;
   virtual ImpType visit(NumberExp* e) = 0;

@@ -34,6 +34,9 @@ public:
   ImpType visit(IdExp* e);
   ImpType visit(ParenthExp* e);
   ImpType visit(CondExp* e);
+  ImpType visit(AndExp* e);
+  ImpType visit(OrExp* e);
+  ImpType visit(ForStatement* s);
 };
 
 

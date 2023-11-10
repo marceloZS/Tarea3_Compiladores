@@ -123,6 +123,29 @@ int ImpInterpreter::visit(IdExp* e) {
   */
 }
 
+int ImpInterpreter::visit(AndExp* e){
+int left = e->left->accept(this);
+int right = e->right->accept(this);
+return left && right;
+}
+
+int ImpInterpreter::visit(OrExp* e){
+int left = e->left->accept(this);
+int right = e->right->accept(this);
+return left || right;
+}
+
+int ImpInterpreter::visit(ForStatement* s){
+int start = s->start->accept(this);
+int end = s->end->accept(this);
+for (int i = start; i <= end; ++i) {
+  env.update(s->id, i);
+  s->body->accept(this);
+}
+return 0;
+}
+
+
 int ImpInterpreter::visit(ParenthExp* ep) {
   return ep->e->accept(this);
 }

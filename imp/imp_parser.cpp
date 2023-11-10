@@ -40,6 +40,11 @@ Scanner::Scanner(string s):input(s),first(0),current(0) {
   reserved["var"] = Token::VAR;
   reserved["true"] = Token::TRUE;
   reserved["false"] = Token::FALSE;
+  reserved["and"] = Token::AND;
+  reserved["or"] = Token::OR;
+  reserved["for"] = Token::FOR;
+  reserved["endfor"] = Token::ENDFOR;
+  reserved[":"] = Token::COLON;
 }
 
 Token* Scanner::nextToken() {
@@ -249,6 +254,7 @@ StatementList* Parser::parseStatementList() {
   id = exp
   print(x)
  */
+
 Stm* Parser::parseStatement() {
   Stm* s = NULL;
   Exp* e;
@@ -260,7 +266,6 @@ Stm* Parser::parseStatement() {
       exit(0);
     }
     s = new AssignStatement(lex, parseExp());
-    //memoria_update(lex, v);
   } else if (match(Token::PRINT)) {
     if (!match(Token::LPAREN)) {
       cout << "Error: esperaba ( " << endl;
@@ -273,25 +278,36 @@ Stm* Parser::parseStatement() {
     }
     s = new PrintStatement(e);
   } else if (match(Token::IF)) {
-      e = parseExp();
-      if (!match(Token::THEN))
-	parserError("Esperaba 'then'");
-      tb = parseBody();
-      fb = NULL;
-      if (match(Token::ELSE)) {
-	fb = parseBody();
-      }
-      if (!match(Token::ENDIF))
-	parserError("Esperaba 'endif'");
-      s = new IfStatement(e,tb,fb);
+    e = parseExp();
+    if (!match(Token::THEN))
+      parserError("Esperaba 'then'");
+    tb = parseBody();
+    fb = NULL;
+    if (match(Token::ELSE)) {
+      fb = parseBody();
+    }
+    if (!match(Token::ENDIF))
+      parserError("Esperaba 'endif'");
+    s = new IfStatement(e,tb,fb);
   } else if (match(Token::WHILE)) {
     e = parseExp();
     if (!match(Token::DO))
       parserError("Esperaba 'do'");
     tb = parseBody();
     if (!match(Token::ENDWHILE))
-	parserError("Esperaba 'endwhile'");
+      parserError("Esperaba 'endwhile'");
     s = new WhileStatement(e,tb);
+  } else if (match(Token::FOR)) {
+    string id = current->lexema;
+    match(Token::ID);
+    match(Token::COLON);
+    Exp* start = parseExp();
+    match(Token::COMMA);
+    Exp* end = parseExp();
+    match(Token::DO);
+    Body* body = parseBody();
+    match(Token::ENDFOR);
+    s = new ForStatement(id, start, end, body);
   } else {
     cout << "No se encontro Statement" << endl;
     exit(0);
@@ -300,7 +316,18 @@ Stm* Parser::parseStatement() {
 }
 
 Exp* Parser::parseExp() {
-  return parseCExp();
+  Exp* e = parseCExp();
+  while (check(Token::AND) || check(Token::OR)) {
+    Token::Type op = current->type;
+    advance();
+    Exp* right = parseCExp();
+    if (op == Token::AND) {
+      e = new AndExp(e, right);
+    } else if (op == Token::OR) {
+      e = new OrExp(e, right);
+    }
+  }
+  return e;
 }
 
 Exp* Parser::parseCExp() {
